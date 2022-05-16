@@ -6,7 +6,7 @@ using CVAnimeFilter.Views;
 
 namespace CVAnimeFilter
 {
-    public partial class App : Application
+    public class App : Application
     {
         public override void Initialize()
         {
@@ -22,7 +22,6 @@ namespace CVAnimeFilter
                     DataContext = new MainWindowViewModel(),
                 };
             }
-
             base.OnFrameworkInitializationCompleted();
         }
     }

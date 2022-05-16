@@ -1,6 +1,8 @@
-﻿using System.Reactive;
+﻿using System;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia.Markup.Xaml.Converters;
 using Avalonia.Media.Imaging;
 using OpenCvSharp;
 using ReactiveUI;
@@ -43,13 +45,12 @@ namespace CVAnimeFilter.ViewModels
         
         private async Task SaveImageAsync()
         {
-            var fileName = await ShowOpenFileDialog.Handle(Unit.Default);
-
+            var fileName = await ShowSaveFileDialog.Handle(Unit.Default);
+            
             if (fileName != null)
             {
-                // load images and operating.
-                var bitmap = new Bitmap(CVSharpGetEdge(fileName).ToMemoryStream());
-                MainImage = bitmap;
+                // save image.
+                MainImage.Save(fileName);
             }
         }
 

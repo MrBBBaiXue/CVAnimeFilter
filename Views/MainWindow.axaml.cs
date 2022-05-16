@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
@@ -19,14 +20,46 @@ namespace CVAnimeFilter.Views
 #endif
             // When the window is activated, registers a handler for the ShowOpenFileDialog interaction.
             this.WhenActivated(d => d(ViewModels.MainWindowViewModel.ShowOpenFileDialog.RegisterHandler(ShowOpenFileDialog)));
+            this.WhenActivated(d => d(ViewModels.MainWindowViewModel.ShowSaveFileDialog.RegisterHandler(ShowSaveFileDialog)));
         }
         
         // Interaction Handler
+        
+        // TODO: Handle errors
         private async Task ShowOpenFileDialog(InteractionContext<Unit, string?> interaction)
         {
             var dialog = new OpenFileDialog();
+            dialog.Filters = new List<FileDialogFilter>
+            {
+                new()
+                {
+                    Extensions =
+                    {
+                        "png", 
+                        "jpg"
+                    }
+                }
+            };
+            dialog.AllowMultiple = false;
             var fileNames = await dialog.ShowAsync(this);
-            if (fileNames != null) interaction.SetOutput(fileNames.FirstOrDefault());
+            if (fileNames != null) interaction.SetOutput(fileNames.FirstOrDefault() ?? null);
+        }
+        private async Task ShowSaveFileDialog(InteractionContext<Unit, string?> interaction)
+        {
+            var dialog = new SaveFileDialog();
+            dialog.Filters = new List<FileDialogFilter>
+            {
+                new()
+                {
+                    Extensions =
+                    {
+                        "png", 
+                        "jpg"
+                    }
+                }
+            };
+            var fileName = await dialog.ShowAsync(this);
+            interaction.SetOutput(fileName ?? null);
         }
     }
 }
