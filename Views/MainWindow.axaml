@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CVAnimeFilter.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:CVAnimeFilter.ViewModels"
+        xmlns:ui="using:FluentAvalonia.UI.Controls"
+        xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+        Width="800" Height="700"
+        x:Class="CVAnimeFilter.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="CVAnimeFilter">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <Grid Margin="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button Content="Open"
+                            Command="{Binding OpenImageCommand}"
+                    />
+                    <Button Content="Save"
+                            Command="{Binding SaveImageCommand}"
+                    />   
+                </StackPanel>
+            </Grid>
+            <Image Margin="10" 
+                   Source="{Binding MainImage}"
+                   Stretch="UniformToFill"
+                   />
+        </StackPanel>
+    </Grid>
+
+</Window>
