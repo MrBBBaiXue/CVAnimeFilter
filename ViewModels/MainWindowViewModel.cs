@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Markup.Xaml.Converters;
 using Avalonia.Media.Imaging;
 using OpenCvSharp;
+using OpenCvSharp.Aruco;
 using ReactiveUI;
 
 namespace CVAnimeFilter.ViewModels
@@ -19,7 +21,9 @@ namespace CVAnimeFilter.ViewModels
         }
         public ReactiveCommand<Unit, Unit> OpenImageCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveImageCommand { get; }
+        public ReactiveCommand<Unit, Unit> BatchOperationCommand { get; }
         public static Interaction<Unit, string?> ShowOpenFileDialog { get; } = new();
+        public static Interaction<Unit, string?> ShowOpenFolderDialog { get; } = new();
         public static Interaction<Unit, string?> ShowSaveFileDialog { get; } = new();
         
         // Init
@@ -27,6 +31,7 @@ namespace CVAnimeFilter.ViewModels
         {
             OpenImageCommand = ReactiveCommand.CreateFromTask(OpenImageAsync);
             SaveImageCommand = ReactiveCommand.CreateFromTask(SaveImageAsync);
+            BatchOperationCommand = ReactiveCommand.CreateFromTask(BatchOperationAsync);
             // The ShowOpenFileDialog interaction requests the UI to show the file open dialog.
         }
         
@@ -51,6 +56,23 @@ namespace CVAnimeFilter.ViewModels
             {
                 // save image.
                 MainImage.Save(fileName);
+            }
+        }
+
+        private async Task BatchOperationAsync()
+        {
+            var folderSource = await ShowOpenFolderDialog.Handle(Unit.Default);
+            var folderTarget = await ShowOpenFolderDialog.Handle(Unit.Default);
+            // TODO: non-recursive
+            if (Directory.Exists(folderSource))
+            {
+                foreach (var file in Directory.GetFiles(folderSource))
+                {
+                    var bitmap = new Bitmap(CVSharpGetEdge(file).ToMemoryStream());
+                    var fileName = Path.GetFileName(file);
+                    var targetFilePath = Path.Combine(folderTarget, fileName);
+                    bitmap.Save(targetFilePath);
+                }
             }
         }
 

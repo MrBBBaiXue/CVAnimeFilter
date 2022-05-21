@@ -21,6 +21,7 @@ namespace CVAnimeFilter.Views
             // When the window is activated, registers a handler for the ShowOpenFileDialog interaction.
             this.WhenActivated(d => d(ViewModels.MainWindowViewModel.ShowOpenFileDialog.RegisterHandler(ShowOpenFileDialog)));
             this.WhenActivated(d => d(ViewModels.MainWindowViewModel.ShowSaveFileDialog.RegisterHandler(ShowSaveFileDialog)));
+            this.WhenActivated(d => d(ViewModels.MainWindowViewModel.ShowOpenFolderDialog.RegisterHandler(ShowOpenFolderDialog)));
         }
         
         // Interaction Handler
@@ -60,6 +61,12 @@ namespace CVAnimeFilter.Views
             };
             var fileName = await dialog.ShowAsync(this);
             interaction.SetOutput(fileName ?? null);
+        }
+        private async Task ShowOpenFolderDialog(InteractionContext<Unit, string?> interaction)
+        {
+            var dialog = new OpenFolderDialog();
+            var folderPath = await dialog.ShowAsync(this);
+            interaction.SetOutput(folderPath ?? null);
         }
     }
 }

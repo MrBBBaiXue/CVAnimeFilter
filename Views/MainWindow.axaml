@@ -25,7 +25,10 @@
                     />
                     <Button Content="Save"
                             Command="{Binding SaveImageCommand}"
-                    />   
+                    />
+                    <Button Content="Folder"
+                            Command="{Binding BatchOperationCommand}"
+                    />    
                 </StackPanel>
             </Grid>
             <Image Margin="10" 
